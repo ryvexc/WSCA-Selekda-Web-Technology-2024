@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\GoogleBaseResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
@@ -20,16 +22,20 @@ class AuthController extends Controller
             "profilePicture" => "required"
         ]);
 
-        $profilePictureURL = Storage::put("/user", $request->file("profilePicture"));
+        $profilePictureURL = Storage::put("public/user", $request->file("profilePicture"));
 
         $user = new User();
         $user->name = $request->name;
+        $user->email = $request->email;
         $user->username = $request->username;
         $user->password = $request->password;
         $user->dateOfBirth = $request->dateOfBirth;
         $user->phoneNumber = $request->phoneNumber;
-        $user->profilePicture = $profilePictureURL;
+        $user->profilePicture = str_replace("public/", "", $profilePictureURL);
+        $user->isActive = 0;
+        $user->isAdmin = 0;
+        $user->save();
 
-        return $user;
+        return new GoogleBaseResource([$user]);
     }
 }
