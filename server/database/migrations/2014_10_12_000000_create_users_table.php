@@ -21,7 +21,6 @@ return new class extends Migration
             $table->date("dateOfBirth");
             $table->string('phoneNumber');
             $table->string("profilePicture");
-            $table->boolean("isActive");
             $table->boolean("isAdmin");
             $table->rememberToken();
             $table->timestamps();
