@@ -6,22 +6,23 @@ import App from "./App";
 import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router-dom";
 import Game from "./pages/game/page";
 import Auth from "./components/Auth";
+import GameLobby from "./pages/game/lobby";
 
 const router = createBrowserRouter([
 	{
-		path: "/",
+		path: "/game",
+		element: <Game />,
+	},
+	{
+		path: "/game",
 		element: <Auth />,
 		children: [
 			{
-				path: "game",
-				element: <Game />,
+				path: "lobby",
+				element: <GameLobby />,
 			},
 		],
 	},
 ]);
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(
-	<React.StrictMode>
-		<RouterProvider router={router} />
-	</React.StrictMode>,
-);
+root.render(<RouterProvider router={router} />);

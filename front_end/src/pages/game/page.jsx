@@ -1,86 +1,169 @@
+import "./styles/global.css";
+import "./styles/ingame.css";
+import { Helmet } from "react-helmet";
+
 export default function Game() {
   return <>
-    <div class="container">
-      <div class="form">
-        <div class="title">
-          <img src="assets/Ball 02.png" alt="" />
-          <div class="text">
-            <h1>World Head</h1>
-            <h1>Football</h1>
-          </div>
-        </div>
+    <Helmet>
+      <script src="scripts/ingame/classes/Vector.js"></script>
+      <script src="scripts/ingame/classes/Size.js"></script>
+      <script src="scripts/ingame/global.js"></script>
+      <script src="scripts/ingame/classes/Ball.js"></script>
+      <script src="scripts/ingame/classes/Character.js"></script>
+      <script src="scripts/ingame/classes/Goal.js"></script>
+      <script src="scripts/ingame/popups.js"></script>
+      <script src="scripts/ingame/loop.js"></script>
+    </Helmet>
 
-        <form id="form">
-          <input
-            type="text"
-            name="username"
-            id="usernameInput"
-            placeholder="Input Username"
-            required
-            autocomplete="off" />
-          <select name="country" required autocomplete="off">
-            <option value="" selected disabled>Select Country</option>
-            <option>Brazil</option>
-            <option>England</option>
-            <option>Germany</option>
-            <option>Italy</option>
-            <option>Japan</option>
-            <option>Netherlands</option>
-            <option>Portugal</option>
-            <option>Spain</option>
-          </select>
-          <select name="opponentCountry" required autocomplete="off">
-            <option value="" selected disabled>Select Opponent Country</option>
-            <option>Brazil</option>
-            <option>England</option>
-            <option>Germany</option>
-            <option>Italy</option>
-            <option>Japan</option>
-            <option>Netherlands</option>
-            <option>Portugal</option>
-            <option>Spain</option>
-          </select>
-          <select name="level" required autocomplete="off">
-            <option value="" selected disabled>Select level</option>
-            <option value="30">Easy</option>
-            <option value="20">Medium</option>
-            <option value="15">Hard</option>
-          </select>
-          <label class="ballSelect">
-            Select Ball
-            <div class="options">
-              <label class="ballOpt">
-                <input type="radio" name="ball" value="Ball 01" required autocomplete="off" />
-                <img src="assets/Ball 01.png" alt="Ball 01" />
-              </label>
-              <label class="ballOpt">
-                <input type="radio" name="ball" value="Ball 02" required autocomplete="off" />
-                <img src="assets/Ball 02.png" alt="Ball 02" />
-              </label>
+    <div className="container">
+      <div className="interface">
+        <div className="left"><span id="playerName">PLAYER NAME</span></div>
+        <div className="middle">
+          <div className="countryInfo">
+            <img src="/game/assets/Flag/Brazil.png" alt="Country A" id="countryA" />
+            <span id="countryAText">Brazil</span>
+          </div>
+          <div className="gameInfo">
+            <div className="scores">
+              <div id="scoreA">0</div>
+              <div id="scoreB">1</div>
             </div>
-          </label>
-          <div class="actions">
-            <button type="submit" id="playGame" autocomplete="off" disabled>Play Game</button>
-            <button type="button" id="openInstruction">Open Instruction</button>
+            <div className="timer">
+              <span>TIMER</span>
+              <span id="timer">30</span>
+            </div>
           </div>
-        </form>
-      </div>
-
-      <div id="instructions">
-        <div class="topbar">
-          <h1>How to play</h1>
-          <button id="closeInstruction">X</button>
+          <div className="countryInfo">
+            <img src="/game/assets/Flag/Brazil.png" alt="Country B" id="countryB" />
+            <span id="countryBText">Brazil</span>
+          </div>
         </div>
-
-        <div class="steps">
-          <div>Input Username</div>
-          <div>Move character to bounce ball</div>
-          <div>Get high score and win</div>
-          <div>Enjoy!</div>
+        <div className="right">
+          <span id="openMatchHistory">MATCH HISTORY</span>
         </div>
       </div>
+      <div className="popups">
+        <div id="countdown" className="hidden"></div>
+
+        <div id="pauseMenu" className="hidden">
+          <div className="panel">
+            <div className="title">
+              <img src="/game/assets/Ball 02.png" alt="Ball 02" />
+              <div className="text">
+                <h1>World Head</h1>
+                <h1>Football</h1>
+              </div>
+            </div>
+            <h2>Game Paused</h2>
+            <button id="continueBtn">CONTINUE</button>
+          </div>
+        </div>
+
+        <div id="overMenu" className="hidden">
+          <div className="panel">
+            <div className="title">
+              <img src="/game/assets/Ball 02.png" alt="Ball 02" />
+              <div className="text">
+                <h1>World Head</h1>
+                <h1>Football</h1>
+              </div>
+            </div>
+            <h2>Game Over</h2>
+
+            <div className="game-summary">
+              <span id="sumPlayerName">PLAYER NAME</span>
+              <table className="summary-group">
+                <tbody>
+                  <tr className="country-img-group">
+                    <td>
+                      <img src="/game/assets/Flag/Brazil.png" alt="" id="sumCountryAImg" />
+                    </td>
+                    <td className="divider"></td>
+                    <td>
+                      <img src="/game/assets/Flag/Brazil.png" alt="" id="sumCountryBImg" />
+                    </td>
+                  </tr>
+                  <tr className="country-text-group">
+                    <td>
+                      <span id="sumCountryAText">Brazil</span>
+                    </td>
+                    <td className="divider">:</td>
+                    <td>
+                      <span id="sumCountryBText">Brazil</span>
+                    </td>
+                  </tr>
+                  <tr className="scores-group">
+                    <td>
+                      <span id="sumScoreA">0</span>
+                    </td>
+                    <td className="divider">:</td>
+                    <td>
+                      <span id="sumScoreB">0</span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="actions">
+              <button id="saveBtn">Save Score</button>
+              <button id="restartBtn">Restart Game</button>
+              <button id="quitBtn">Quit Game</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="matchHistory" className="hidden">
+          <div className="panel">
+            <div className="title">
+              <img src="/game/assets/Ball 02.png" alt="Ball 02" />
+              <div className="text">
+                <h1>World Head</h1>
+                <h1>Football</h1>
+              </div>
+            </div>
+
+            <div className="top-bar">
+              <h2>Match History</h2>
+              <select id="sortMode">
+                <option value="recent">Sort By Recent</option>
+                <option value="score">Sort By Score</option>
+              </select>
+            </div>
+
+            <div id="matches">
+              <div className="match">
+                <span className="plr-name">PLAYER NAME</span>
+                <table className="summary-group">
+                  <tbody>
+                    <tr className="country-img-group">
+                      <td>
+                        <img src="/game/assets/Flag/Brazil.png" alt="" />
+                      </td>
+                      <td className="divider"></td>
+                      <td>
+                        <img src="/game/assets/Flag/Brazil.png" alt="" />
+                      </td>
+                    </tr>
+                    <tr className="scores-group">
+                      <td>
+                        <span>0</span>
+                      </td>
+                      <td className="divider">-</td>
+                      <td>
+                        <span>0</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <button id="closeMatchHistory">Back</button>
+          </div>
+        </div>
+      </div>
+      <canvas id="canvas" width="1000" height="512"></canvas>
     </div>
-
-    <script src="scripts/lobbypage.js"></script>
   </>
 }
