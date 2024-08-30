@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\BlogResource;
+use App\Http\Resources\PortofolioResource;
 use App\Http\Resources\GoogleBaseResource;
-use App\Models\Blog;
+use App\Models\Portofolio;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class BlogController extends Controller
+class PortofolioController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -25,7 +25,7 @@ class BlogController extends Controller
         // getting perpage items or default will be set.
         $perPage = isset($request->perPage) ? $request->perPage : 10;
 
-        return GoogleBaseResource::pagination(200, Blog::class, Blog::paginate($perPage));
+        return GoogleBaseResource::pagination(200, Portofolio::class, Portofolio::paginate($perPage));
     }
 
     /**
@@ -49,21 +49,18 @@ class BlogController extends Controller
             "image" => "required",
             "title" => "required",
             "description" => "required",
-            "tags" => "required"
         ]);
 
-        $image_url = Storage::put("public/blog", $request->file("image"));
+        $image_url = Storage::put("public/portofolio", $request->file("image"));
 
-        $blog = new Blog();
-        $blog->title = $request->title;
-        $blog->description = $request->description;
-        $blog->author_id = $request->user()->id;
-        $blog->tags = $request->tags;
-        $blog->image = $image_url;
-        $blog->date = Carbon::now();
-        $blog->save();
+        $portofolio = new Portofolio();
+        $portofolio->title = $request->title;
+        $portofolio->image = $image_url;
+        $portofolio->description = $request->description;
+        $portofolio->author_id = $request->user()->id;
+        $portofolio->save();
 
-        return GoogleBaseResource::success(200, "Your blog has been created.", ["item" => $blog]);
+        return GoogleBaseResource::success(200, "Your portofolio has been created.", ["item" => $portofolio]);
     }
 
     /**
@@ -97,7 +94,7 @@ class BlogController extends Controller
             "tags" => "required"
         ]);
 
-        Blog::find($id)->update($validator);
+        Portofolio::find($id)->update($validator);
 
         return GoogleBaseResource::success(200, "Your blog has been successfully updated.");
     }
@@ -107,12 +104,12 @@ class BlogController extends Controller
      */
     public function destroy(string $id)
     {
-        if (($blog = Blog::find($id))) {
+        if (($blog = Portofolio::find($id))) {
             $blog->delete();
 
             return GoogleBaseResource::success(200, "Your blog has been deleted.");
         }
 
-        return GoogleBaseResource::error(404, "Blog not found");
+        return GoogleBaseResource::error(404, "Portofolio not found");
     }
 }

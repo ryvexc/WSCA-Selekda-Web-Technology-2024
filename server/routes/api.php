@@ -33,5 +33,7 @@ Route::prefix("v1")->group(function () {
 
     Route::prefix("admin")->middleware("auth:sanctum")->group(function () {
         Route::resource("blog", Admin\BlogController::class);
+        Route::resource("banner", Admin\BannerController::class);
+        Route::resource("portofolio", Admin\PortofolioController::class);
     });
 });

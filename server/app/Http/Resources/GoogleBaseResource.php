@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Banner;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -57,7 +58,7 @@ class GoogleBaseResource
                 "totalItems" => $class::all()->count(),
                 "startIndex" => $arrayed_items["current_page"],
                 "itemsPerPage" => $arrayed_items["per_page"],
-                "items" => $arrayed_items["data"],
+                "items" => ($class == Banner::class ? Banner::format($arrayed_items["data"]) : $arrayed_items["data"]),
             ]),
             $code
         );

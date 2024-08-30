@@ -3,15 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\BlogResource;
+use App\Http\Resources\BannerResource;
 use App\Http\Resources\GoogleBaseResource;
-use App\Models\Blog;
+use App\Models\Banner;
 use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
-class BlogController extends Controller
+class BannerController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -25,7 +25,7 @@ class BlogController extends Controller
         // getting perpage items or default will be set.
         $perPage = isset($request->perPage) ? $request->perPage : 10;
 
-        return GoogleBaseResource::pagination(200, Blog::class, Blog::paginate($perPage));
+        return GoogleBaseResource::pagination(200, Banner::class, Banner::paginate($perPage));
     }
 
     /**
@@ -46,24 +46,23 @@ class BlogController extends Controller
         }
 
         $request->validate([
-            "image" => "required",
             "title" => "required",
+            "image" => "required",
             "description" => "required",
-            "tags" => "required"
+            "status" => "required",
         ]);
 
-        $image_url = Storage::put("public/blog", $request->file("image"));
+        $image_url = Storage::put("public/banner", $request->file("image"));
 
-        $blog = new Blog();
-        $blog->title = $request->title;
-        $blog->description = $request->description;
-        $blog->author_id = $request->user()->id;
-        $blog->tags = $request->tags;
-        $blog->image = $image_url;
-        $blog->date = Carbon::now();
-        $blog->save();
+        $banner = new Banner();
+        $banner->title = $request->title;
+        $banner->image = $image_url;
+        $banner->description = $request->description;
+        $banner->status = $request->status;
+        $banner->date = Carbon::now();
+        $banner->save();
 
-        return GoogleBaseResource::success(200, "Your blog has been created.", ["item" => $blog]);
+        return GoogleBaseResource::success(200, "Your banner has been created.", ["item" => $banner]);
     }
 
     /**
@@ -94,12 +93,12 @@ class BlogController extends Controller
         $validator = $request->validate([
             "title" => "required",
             "description" => "required",
-            "tags" => "required"
+            "status" => "required"
         ]);
 
-        Blog::find($id)->update($validator);
+        Banner::find($id)->update($validator);
 
-        return GoogleBaseResource::success(200, "Your blog has been successfully updated.");
+        return GoogleBaseResource::success(200, "Your banner has been successfully updated.");
     }
 
     /**
@@ -107,12 +106,12 @@ class BlogController extends Controller
      */
     public function destroy(string $id)
     {
-        if (($blog = Blog::find($id))) {
-            $blog->delete();
+        if (($banner = Banner::find($id))) {
+            $banner->delete();
 
-            return GoogleBaseResource::success(200, "Your blog has been deleted.");
+            return GoogleBaseResource::success(200, "Your banner has been deleted.");
         }
 
-        return GoogleBaseResource::error(404, "Blog not found");
+        return GoogleBaseResource::error(404, "Banner not found");
     }
 }
