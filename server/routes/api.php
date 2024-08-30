@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
@@ -29,4 +30,8 @@ Route::prefix("v1")->group(function () {
     // Route::resource("user", UserController::class);
     Route::get("user", [UserController::class, "index"])->middleware("auth:sanctum");
     Route::put("user", [UserController::class, "update"])->middleware("auth:sanctum");
+
+    Route::prefix("admin")->middleware("auth:sanctum")->group(function () {
+        Route::resource("blog", Admin\BlogController::class);
+    });
 });
