@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<style>
+			canvas {
+				background-color: black;
+				position: absolute;
+				left: 50%;
+				top: 50%;
+				transform: translate(-50%, -50%);
+			}
+
+			#score-box {
+				background-color: darkblue;
+				position: absolute;
+				color: white;
+				left: 50%;
+				display: flex;
+				transform: translateX(-50%);
+				border: 2px solid blue;
+				border-radius: 12px;
+			}
+
+			.score {
+				padding: 20px;
+				font-size: large;
+				font-family: Arial, Helvetica, sans-serif;
+			}
+
+			.score:nth-child(1) {
+				border-right: 1px solid blue;
+			}
+			.score:nth-child(2) {
+				border-left: 1px solid blue;
+			}
+
+			* {
+				margin: 0;
+				padding: 0;
+				user-select: none;
+			}
+		</style>
+	</head>
+	<body>
+		<canvas width="1000" height="600"></canvas>
+
+		<div id="score-box">
+			<p id="score-a" class="score">2</p>
+			<p id="score-b" class="score">0</p>
+		</div>
+
+		<script src="scripts/data.js"></script>
+		<script src="scripts/main.js"></script>
+	</body>
+</html>
