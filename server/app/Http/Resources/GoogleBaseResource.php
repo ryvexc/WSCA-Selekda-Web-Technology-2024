@@ -26,13 +26,22 @@ class GoogleBaseResource
         );
     }
 
-    public static function success(int $code, string $message)
+    public static function success(int $code, string $message, $data)
     {
         return response()->json(
             static::format([
                 "code" => $code,
-                "message" => $message
+                "message" => $message,
+                ...$data
             ]),
+            $code
+        );
+    }
+
+    public static function data(int $code, $data)
+    {
+        return response()->json(
+            static::format($data),
             $code
         );
     }

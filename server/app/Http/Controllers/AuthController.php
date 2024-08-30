@@ -7,6 +7,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class AuthController extends Controller
@@ -36,7 +37,7 @@ class AuthController extends Controller
             $user->profilePicture = str_replace("public/", "", $profilePictureURL);
             $user->isAdmin = 0;
             $user->save();
-            return GoogleBaseResource::success(200, "Your account has been registered successfully.");
+            return GoogleBaseResource::success(200, "Your account has been registered successfully.", []);
         } catch (Exception $e) {
             return GoogleBaseResource::error(400, $e->{"errorInfo"}[2]);
         }
@@ -49,6 +50,12 @@ class AuthController extends Controller
             "password" => "required"
         ]);
 
-        return $this->success($credentials);
+        if (Auth::attempt($credentials)) {
+            return GoogleBaseResource::success(200, "Login success", [
+                "token" => $request->user()->createToken("Login Auth")->plainTextToken,
+            ]);
+        }
+
+        return GoogleBaseResource::error(401, "Invalid credentials");
     }
 }
