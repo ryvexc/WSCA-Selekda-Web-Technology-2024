@@ -3,6 +3,10 @@ const ctx = canvas.getContext("2d");
 
 let painting = false;
 
+const colors = {
+	eraser: "white",
+};
+
 const brushSize = 1;
 
 function startPosition(e) {
