@@ -19,7 +19,7 @@ return new class extends Migration
             $table->longText("description");
             $table->foreignId("author_id")->references("id")->on("users");
             $table->string("tags");
-            $table->timestamps();
+            $table->timestamp("date");
         });
     }
 

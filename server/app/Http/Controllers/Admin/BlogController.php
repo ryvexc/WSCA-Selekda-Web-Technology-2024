@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\BlogResource;
 use App\Http\Resources\GoogleBaseResource;
 use App\Models\Blog;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -14,11 +16,13 @@ class BlogController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $blogs = Blog::all();
+        if ($request->user()->isAdmin == 0) {
+            return GoogleBaseResource::error(403, "Forbidden.");
+        }
 
-        return GoogleBaseResource::data(200, ["totalItems" => $blogs]);
+        return GoogleBaseResource::pagination(200, Blog::class, Blog::paginate(5));
     }
 
     /**
@@ -53,6 +57,7 @@ class BlogController extends Controller
         $blog->author_id = $request->user()->id;
         $blog->tags = $request->tags;
         $blog->image = $image_url;
+        $blog->date = Carbon::now();
         $blog->save();
 
         return GoogleBaseResource::success(200, "Your blog has been created.", ["items" => $blog]);
@@ -79,7 +84,11 @@ class BlogController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            "title" => "required",
+            "description" => "required",
+            "tags" => "required"
+        ]);
     }
 
     /**
