@@ -22,7 +22,10 @@ class BlogController extends Controller
             return GoogleBaseResource::error(403, "Forbidden.");
         }
 
-        return GoogleBaseResource::pagination(200, Blog::class, Blog::paginate(5));
+        // getting perpage items or default will be set.
+        $perPage = isset($request->perPage) ? $request->perPage : 10;
+
+        return GoogleBaseResource::pagination(200, Blog::class, Blog::paginate($perPage));
     }
 
     /**
@@ -84,11 +87,19 @@ class BlogController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate([
+        if ($request->user()->isAdmin == 0) {
+            return GoogleBaseResource::error(403, "Forbidden.");
+        }
+
+        $validator = $request->validate([
             "title" => "required",
             "description" => "required",
             "tags" => "required"
         ]);
+
+        Blog::find($id)->update($validator);
+
+        return GoogleBaseResource::success(200, "Your blog has been successfully updated.");
     }
 
     /**
@@ -96,6 +107,12 @@ class BlogController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        if (($blog = Blog::find($id))) {
+            $blog->delete();
+
+            return GoogleBaseResource::success(200, "Your blog has been deleted.");
+        }
+
+        return GoogleBaseResource::error(404, "Blog not found");
     }
 }

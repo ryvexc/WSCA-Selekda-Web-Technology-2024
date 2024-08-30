@@ -9,6 +9,14 @@ class Blog extends Model
 {
     use HasFactory;
 
-    protected $hidden = ["created_at", "updated_at"];
     public $timestamps = false;
+
+    protected $fillable = ["title", "description", "tags"];
+    protected $hidden = ["created_at", "updated_at", "author_id"];
+    protected $with = ["author"];
+
+    public function author()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

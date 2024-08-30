@@ -27,7 +27,7 @@ class GoogleBaseResource
         );
     }
 
-    public static function success(int $code, string $message, $data)
+    public static function success(int $code, string $message, $data = [])
     {
         return response()->json(
             static::format([

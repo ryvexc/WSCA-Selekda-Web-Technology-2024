@@ -37,7 +37,7 @@ class AuthController extends Controller
             $user->profilePicture = str_replace("public/", "", $profilePictureURL);
             $user->isAdmin = 0;
             $user->save();
-            return GoogleBaseResource::success(200, "Your account has been registered successfully.", []);
+            return GoogleBaseResource::success(200, "Your account has been registered successfully.");
         } catch (Exception $e) {
             return GoogleBaseResource::error(400, $e->{"errorInfo"}[2]);
         }

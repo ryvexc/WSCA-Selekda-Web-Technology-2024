@@ -64,7 +64,7 @@ class UserController extends Controller
 
         if (($user = $request->user())) {
             $user->update($validator);
-            return GoogleBaseResource::success(200, "Your profile has been updated.", []);
+            return GoogleBaseResource::success(200, "Your profile has been updated.");
         }
 
         return GoogleBaseResource::error(500, "User not found");
