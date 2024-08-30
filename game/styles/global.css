@@ -1,0 +1,27 @@
+* {
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-primary: #22529a;
+  --color-secondary: #00255a;
+}
+
+body {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  background-color: var(--color-primary);
+  color: white;
+  font-family: Roboto, Helvetica, sans-serif;
+}
+
+.container {
+  max-width: 1000px;
+  max-height: 512px;
+}
+
+.hidden {
+  display: none !important;
+}

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" href="styles/global.css" />
+		<link rel="stylesheet" href="styles/ingame.css" />
+		<title>Game</title>
+	</head>
+	<body>
+		<div class="container">
+			<div class="interface">
+				<div class="left"><span id="playerName">PLAYER NAME</span></div>
+				<div class="middle">
+					<div class="countryInfo">
+						<img src="assets/Flag/Brazil.png" alt="Country A" id="countryA" />
+						<span id="countryAText">Brazil</span>
+					</div>
+					<div class="gameInfo">
+						<div class="scores">
+							<div id="scoreA">0</div>
+							<div id="scoreB">1</div>
+						</div>
+						<div class="timer">
+							<span>TIMER</span>
+							<span id="timer">30</span>
+						</div>
+					</div>
+					<div class="countryInfo">
+						<img src="assets/Flag/Brazil.png" alt="Country B" id="countryB" />
+						<span id="countryBText">Brazil</span>
+					</div>
+				</div>
+				<div class="right">
+					<span id="openMatchHistory">MATCH HISTORY</span>
+				</div>
+			</div>
+			<div class="popups">
+				<div id="countdown" class="hidden"></div>
+
+				<div id="pauseMenu" class="hidden">
+					<div class="panel">
+						<div class="title">
+							<img src="assets/Ball 02.png" alt="Ball 02" />
+							<div class="text">
+								<h1>World Head</h1>
+								<h1>Football</h1>
+							</div>
+						</div>
+						<h2>Game Paused</h2>
+						<button id="continueBtn">CONTINUE</button>
+					</div>
+				</div>
+
+				<div id="overMenu" class="hidden">
+					<div class="panel">
+						<div class="title">
+							<img src="assets/Ball 02.png" alt="Ball 02" />
+							<div class="text">
+								<h1>World Head</h1>
+								<h1>Football</h1>
+							</div>
+						</div>
+						<h2>Game Over</h2>
+
+						<div class="game-summary">
+							<span id="sumPlayerName">PLAYER NAME</span>
+							<table class="summary-group">
+								<tr class="country-img-group">
+									<td>
+										<img src="assets/Flag/Brazil.png" alt="" id="sumCountryAImg" />
+									</td>
+									<td class="divider"></td>
+									<td>
+										<img src="assets/Flag/Brazil.png" alt="" id="sumCountryBImg" />
+									</td>
+								</tr>
+								<tr class="country-text-group">
+									<td>
+										<span id="sumCountryAText">Brazil</span>
+									</td>
+									<td class="divider">:</td>
+									<td>
+										<span id="sumCountryBText">Brazil</span>
+									</td>
+								</tr>
+								<tr class="scores-group">
+									<td>
+										<span id="sumScoreA">0</span>
+									</td>
+									<td class="divider">:</td>
+									<td>
+										<span id="sumScoreB">0</span>
+									</td>
+								</tr>
+							</table>
+						</div>
+
+						<div class="actions">
+							<button id="saveBtn">Save Score</button>
+							<button id="restartBtn">Restart Game</button>
+							<button id="quitBtn">Quit Game</button>
+						</div>
+					</div>
+				</div>
+
+				<div id="matchHistory" class="hidden">
+					<div class="panel">
+						<div class="title">
+							<img src="assets/Ball 02.png" alt="Ball 02" />
+							<div class="text">
+								<h1>World Head</h1>
+								<h1>Football</h1>
+							</div>
+						</div>
+
+						<div class="top-bar">
+							<h2>Match History</h2>
+							<select id="sortMode">
+								<option value="recent">Sort By Recent</option>
+								<option value="score">Sort By Score</option>
+							</select>
+						</div>
+
+						<div id="matches">
+							<div class="match">
+								<span class="plr-name">PLAYER NAME</span>
+								<table class="summary-group">
+									<tr class="country-img-group">
+										<td>
+											<img src="assets/Flag/Brazil.png" alt="" />
+										</td>
+										<td class="divider"></td>
+										<td>
+											<img src="assets/Flag/Brazil.png" alt="" />
+										</td>
+									</tr>
+									<tr class="scores-group">
+										<td>
+											<span>0</span>
+										</td>
+										<td class="divider">-</td>
+										<td>
+											<span>0</span>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+
+						<button id="closeMatchHistory">Back</button>
+					</div>
+				</div>
+			</div>
+			<canvas id="canvas" width="1000" height="512"></canvas>
+		</div>
+
+		<script src="scripts/ingame/classes/Vector.js"></script>
+		<script src="scripts/ingame/classes/Size.js"></script>
+		<script src="scripts/ingame/global.js"></script>
+		<script src="scripts/ingame/classes/Ball.js"></script>
+		<script src="scripts/ingame/classes/Character.js"></script>
+		<script src="scripts/ingame/classes/Goal.js"></script>
+		<script src="scripts/ingame/popups.js"></script>
+		<script src="scripts/ingame/loop.js"></script>
+	</body>
+</html>

@@ -3,56 +3,92 @@
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
-		<style>
-			canvas {
-				background-color: black;
-				position: absolute;
-				left: 50%;
-				top: 50%;
-				transform: translate(-50%, -50%);
-			}
-
-			#score-box {
-				background-color: darkblue;
-				position: absolute;
-				color: white;
-				left: 50%;
-				display: flex;
-				transform: translateX(-50%);
-				border: 2px solid blue;
-				border-radius: 12px;
-			}
-
-			.score {
-				padding: 20px;
-				font-size: large;
-				font-family: Arial, Helvetica, sans-serif;
-			}
-
-			.score:nth-child(1) {
-				border-right: 1px solid blue;
-			}
-			.score:nth-child(2) {
-				border-left: 1px solid blue;
-			}
-
-			* {
-				margin: 0;
-				padding: 0;
-				user-select: none;
-			}
-		</style>
+		<link rel="stylesheet" href="styles/global.css" />
+		<link rel="stylesheet" href="styles/lobbypage.css" />
+		<title>Game</title>
 	</head>
 	<body>
-		<canvas width="1000" height="600"></canvas>
+		<div class="container">
+			<div class="form">
+				<div class="title">
+					<img src="assets/Ball 02.png" alt="" />
+					<div class="text">
+						<h1>World Head</h1>
+						<h1>Football</h1>
+					</div>
+				</div>
 
-		<div id="score-box">
-			<p id="score-a" class="score">2</p>
-			<p id="score-b" class="score">0</p>
+				<form id="form">
+					<input
+						type="text"
+						name="username"
+						id="usernameInput"
+						placeholder="Input Username"
+						required
+						autocomplete="off" />
+					<select name="country" required autocomplete="off">
+						<option value="" selected disabled>Select Country</option>
+						<option>Brazil</option>
+						<option>England</option>
+						<option>Germany</option>
+						<option>Italy</option>
+						<option>Japan</option>
+						<option>Netherlands</option>
+						<option>Portugal</option>
+						<option>Spain</option>
+					</select>
+					<select name="opponentCountry" required autocomplete="off">
+						<option value="" selected disabled>Select Opponent Country</option>
+						<option>Brazil</option>
+						<option>England</option>
+						<option>Germany</option>
+						<option>Italy</option>
+						<option>Japan</option>
+						<option>Netherlands</option>
+						<option>Portugal</option>
+						<option>Spain</option>
+					</select>
+					<select name="level" required autocomplete="off">
+						<option value="" selected disabled>Select level</option>
+						<option value="30">Easy</option>
+						<option value="20">Medium</option>
+						<option value="15">Hard</option>
+					</select>
+					<label class="ballSelect">
+						Select Ball
+						<div class="options">
+							<label class="ballOpt">
+								<input type="radio" name="ball" value="Ball 01" required autocomplete="off" />
+								<img src="assets/Ball 01.png" alt="Ball 01" />
+							</label>
+							<label class="ballOpt">
+								<input type="radio" name="ball" value="Ball 02" required autocomplete="off" />
+								<img src="assets/Ball 02.png" alt="Ball 02" />
+							</label>
+						</div>
+					</label>
+					<div class="actions">
+						<button type="submit" id="playGame" autocomplete="off" disabled>Play Game</button>
+						<button type="button" id="openInstruction">Open Instruction</button>
+					</div>
+				</form>
+			</div>
+
+			<div id="instructions">
+				<div class="topbar">
+					<h1>How to play</h1>
+					<button id="closeInstruction">X</button>
+				</div>
+
+				<div class="steps">
+					<div>Input Username</div>
+					<div>Move character to bounce ball</div>
+					<div>Get high score and win</div>
+					<div>Enjoy!</div>
+				</div>
+			</div>
 		</div>
 
-		<script src="scripts/data.js"></script>
-		<script src="scripts/main.js"></script>
+		<script src="scripts/lobbypage.js"></script>
 	</body>
 </html>
