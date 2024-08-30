@@ -32,6 +32,8 @@ Route::prefix("v1")->group(function () {
     Route::put("user", [UserController::class, "update"])->middleware("auth:sanctum");
 
     Route::prefix("admin")->middleware("auth:sanctum")->group(function () {
+        Route::get("users", [Admin\UserController::class, "index"]);
+
         Route::resource("blog", Admin\BlogController::class);
         Route::resource("banner", Admin\BannerController::class);
         Route::resource("portofolio", Admin\PortofolioController::class);

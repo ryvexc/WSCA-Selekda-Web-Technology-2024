@@ -60,7 +60,7 @@ class PortofolioController extends Controller
         $portofolio->author_id = $request->user()->id;
         $portofolio->save();
 
-        return GoogleBaseResource::success(200, "Your portofolio has been created.", ["item" => $portofolio]);
+        return GoogleBaseResource::success(200, "Portofolio created.", ["item" => $portofolio]);
     }
 
     /**
@@ -90,13 +90,12 @@ class PortofolioController extends Controller
 
         $validator = $request->validate([
             "title" => "required",
-            "description" => "required",
-            "tags" => "required"
+            "description" => "required"
         ]);
 
         Portofolio::find($id)->update($validator);
 
-        return GoogleBaseResource::success(200, "Your blog has been successfully updated.");
+        return GoogleBaseResource::success(200, "Portofolio updated.");
     }
 
     /**
@@ -104,10 +103,10 @@ class PortofolioController extends Controller
      */
     public function destroy(string $id)
     {
-        if (($blog = Portofolio::find($id))) {
-            $blog->delete();
+        if (($portofolio = Portofolio::find($id))) {
+            $portofolio->delete();
 
-            return GoogleBaseResource::success(200, "Your blog has been deleted.");
+            return GoogleBaseResource::success(200, "Portofolio has been deleted.");
         }
 
         return GoogleBaseResource::error(404, "Portofolio not found");
