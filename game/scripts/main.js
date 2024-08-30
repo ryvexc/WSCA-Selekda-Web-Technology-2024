@@ -14,6 +14,20 @@ const player = new Player(150, 385, match.a, 0.4);
 const enemy = new Enemy(700, 385, match.b, 0.4);
 const ball = new Ball(470, 300, 0.4);
 
+const data = {
+	player: {
+		score: 0,
+	},
+	enemy: {
+		score: 0,
+	},
+};
+
+const bufferCanvas = document.createElement("canvas");
+const bufferContext = bufferCanvas.getContext("2d");
+bufferCanvas.width = canvas.width;
+bufferCanvas.height = canvas.height;
+
 const countryFlagsBanner = [];
 
 function generateCountryFlagsBanner() {
@@ -63,26 +77,43 @@ function handleMovement() {
 
 function update() {
 	requestAnimationFrame(update);
-	// draw background
-	background.draw();
-	flagA.draw();
-	flagB.draw();
+
+	// Clear the entire canvas
+	bufferContext.clearRect(0, 0, canvas.width, canvas.height);
+
+	// Draw all elements
+	background.draw(bufferContext);
+	flagA.draw(bufferContext);
+	flagB.draw(bufferContext);
 
 	countryFlagsBanner.forEach((countryFlagBanner) => {
-		countryFlagBanner.draw();
+		countryFlagBanner.draw(bufferContext);
 	});
 
-	player.update();
-	enemy.update();
+	// Update and draw player and enemy
+	player.update(bufferContext);
+	enemy.update(bufferContext);
 
-	ball.update();
-	gawangA.draw();
-	gawangB.draw();
+	// Update and draw the ball
+	ball.update(bufferContext);
+
+	// Draw the goals (gawang)
+	gawangA.draw(bufferContext);
+	gawangB.draw(bufferContext);
+
+	context.clearRect(0, 0, canvas.width, canvas.height);
+	context.drawImage(bufferCanvas, 0, 0);
 
 	if (ball.x > gawangB.x) {
+		data.player.score += 1;
+		ball.x = canvas.clientWidth / 2;
+	} else if (ball.x < gawangA.x) {
+		data.enemy.score += 1;
+		console.log("ENEMY GOAL");
 	}
 
-	scoreBox.style.top = `${document.getElementsByTagName("canvas").item(0).getBoundingClientRect().top + 50}px`;
+	// Update score box position
+	scoreBox.style.top = `${canvas.getBoundingClientRect().top + 50}px`;
 }
 
 handleMovement();

@@ -31,13 +31,12 @@ class CanvasImage {
 
 		this.image.onload = () => {
 			this.isLoaded = true;
-			this.draw(); // Draw the image once it is fully loaded
 		};
 	}
 
-	draw() {
+	draw(ctx) {
 		if (this.isLoaded) {
-			context.drawImage(this.image, this.x, this.y, this.width, this.height);
+			ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
 		}
 	}
 
@@ -65,8 +64,8 @@ class Flag {
 		this.image.src = source;
 	}
 
-	draw() {
-		context.drawImage(this.image, this.x, this.y, this.width, this.height);
+	draw(ctx) {
+		ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
 	}
 }
 
@@ -77,16 +76,16 @@ class Gawang {
 		this.width = 198 * scale;
 		this.height = 373 * scale;
 		this.source = mirror ? "assets/sprites/goal-side-b.png" : "assets/sprites/goal-side-a.png";
+		this.image = new CanvasImage(this.x, this.y, this.width, this.height, this.source);
 	}
 
-	draw() {
-		const image = new CanvasImage(this.x, this.y, this.width, this.height, this.source);
-		image.draw();
+	draw(ctx) {
+		this.image.draw(ctx);
 	}
 }
 
 class PlayerAnimation {
-	static Idle = { name: "Idle", max: 17 };
+	static Idle = { name: "Idle", max: 18 };
 	static Jump = { name: "Jump", max: 4 };
 	static Kick = { name: "Kick", max: 8 };
 	static Move_Backward = { name: "Move Backward", max: 9 };
@@ -99,7 +98,6 @@ class PlayerAnimation {
 }
 
 class Player {
-	animation = PlayerAnimation.Idle;
 	animation_step = 0;
 
 	constructor(x, y, playerFlag, scale = 1, velocity = { x: 0, y: 0 }) {
@@ -107,6 +105,7 @@ class Player {
 		this.x = x;
 		this.y = y;
 		this.playerFlag = playerFlag;
+		this.animation = PlayerAnimation.Idle;
 		this.scale = scale;
 		this.velocity = velocity;
 		this.width = 360 * this.scale;
@@ -124,6 +123,7 @@ class Player {
 	}
 
 	changeAnimation(animation) {
+		this.animationProgressDuration = 0;
 		if (this.animation.name !== animation.name) this.animation_step = 0;
 		this.animation = animation;
 	}
@@ -158,23 +158,18 @@ class Player {
 		}
 	}
 
-	draw() {
-		context.drawImage(this.image, this.x, this.y, this.width, this.height);
-	}
-
-	async update() {
+	async update(ctx) {
 		this.animationProgressDuration++;
 		if (this.animation_step >= this.animation.max - 1) {
 			this.animation_step = 0;
+		} else {
+			if (this.animationProgressDuration > 6) {
+				this.animationProgressDuration = 0;
+				this.animation_step += 1;
+			}
 		}
 
-		if (this.animationProgressDuration > 6) {
-			this.animationProgressDuration = 0;
-			this.animation_step += 1;
-			this.updateImage();
-		}
-
-		if (ball.x < player.x + player.width * 0.75 && ball.x > player.x - 10 && ball.y < player.y + player.height - 10) {
+		if (ball.x < this.x + this.width * 0.75 && ball.x > this.x - 10 && ball.y < this.y + this.height - 10) {
 			for (let i = 10; i > 0; i--) {
 				ball.x += i;
 				await new Promise((resolve) => setTimeout(resolve, 20));
@@ -185,12 +180,20 @@ class Player {
 		if (this.x <= 30) this.x += 20;
 		if (this.x >= 825) this.x -= 20;
 		this.y += this.velocity.y;
-		this.draw();
+
+		this.draw(ctx);
+	}
+
+	draw(ctx) {
+		const image = new Image(this.width, this.height);
+		image.src = `assets/characters/${this.playerFlag}/${this.animation.name}/${
+			this.animation.name
+		}_${PlayerAnimation.getStepFormat(this.animation_step)}.png`;
+		ctx.drawImage(image, this.x, this.y, this.width, this.height);
 	}
 }
 
 class Enemy {
-	animation = PlayerAnimation.Idle;
 	animation_step = 0;
 
 	constructor(x, y, playerFlag, scale = 1, velocity = { x: 0, y: 0 }) {
@@ -199,6 +202,7 @@ class Enemy {
 		this.y = y;
 		this.playerFlag = playerFlag;
 		this.scale = scale;
+		this.animation = PlayerAnimation.Idle;
 		this.velocity = velocity;
 		this.width = 360 * this.scale;
 		this.height = 360 * this.scale;
@@ -249,26 +253,18 @@ class Enemy {
 		}
 	}
 
-	draw() {
-		context.save();
-		context.scale(-1, 1);
-		context.drawImage(this.image, -this.x - this.width, this.y, this.width, this.height);
-		context.restore();
-	}
-
-	async update() {
+	async update(ctx) {
 		this.animationProgressDuration++;
 		if (this.animation_step >= this.animation.max - 1) {
 			this.animation_step = 0;
+		} else {
+			if (this.animationProgressDuration > 6) {
+				this.animationProgressDuration = 0;
+				this.animation_step += 1;
+			}
 		}
 
-		if (this.animationProgressDuration > 6) {
-			this.animationProgressDuration = 0;
-			this.animation_step += 1;
-			this.updateImage();
-		}
-
-		if (ball.x < enemy.x + enemy.width * 0.75 && ball.x > enemy.x - 10 && ball.y < enemy.y + enemy.height - 10) {
+		if (ball.x < this.x + this.width * 0.75 && ball.x > this.x - 10 && ball.y < this.y + this.height - 10) {
 			for (let i = 10; i > 0; i--) {
 				ball.x -= i;
 				await new Promise((resolve) => setTimeout(resolve, 20));
@@ -279,7 +275,19 @@ class Enemy {
 		if (this.x <= 30) this.x += 20;
 		if (this.x >= 825) this.x -= 20;
 		this.y += this.velocity.y;
-		this.draw();
+
+		this.draw(ctx);
+	}
+
+	draw(ctx) {
+		const image = new Image(this.width, this.height);
+		image.src = `assets/characters/${this.playerFlag}/${this.animation.name}/${
+			this.animation.name
+		}_${PlayerAnimation.getStepFormat(this.animation_step)}.png`;
+		ctx.save();
+		ctx.scale(-1, 1);
+		ctx.drawImage(image, -this.x - this.width, this.y, this.width, this.height);
+		ctx.restore();
 	}
 }
 
@@ -296,17 +304,17 @@ class Ball {
 		this.image.src = ["assets/sprites/Ball 01.png", "assets/sprites/Ball 02.png"][Math.floor(Math.random() * 2)];
 	}
 
-	draw() {
-		context.drawImage(this.image, this.x, this.y, this.width, this.height);
+	draw(ctx) {
+		ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
 	}
 
-	update() {
+	update(ctx) {
 		if (this.y < 447) {
 			this.y += ++this.gravityForce * this.gravityStrength;
 		} else {
 			this.gravityForce = 0;
 		}
 
-		this.draw();
+		this.draw(ctx);
 	}
 }
